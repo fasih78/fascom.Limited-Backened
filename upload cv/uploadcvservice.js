@@ -101,6 +101,7 @@ routes.post("/uploadcv", async (req, res) => {
               coverletter: coverletter,
               mobile: mobile,
             });
+        
             await user.save();
           } else {
             res.status(400).send({ message: "invalid email address!" });
@@ -108,27 +109,30 @@ routes.post("/uploadcv", async (req, res) => {
         } catch (err) {
           console.log({ error: err.message });
         }
-
-        const info = await transporter.sendMail({
-          from: "career@fascom.com", // sender address
-          to: "career@fascom.com", // list of receivers
-          subject: "Hello !✔", // Subject line
+        // Example of a callback function
+        function sending_email  (){
+          setTimeout(function () {
+            
+            const info =  transporter.sendMail({
+              from: "career@fascom.com", 
+              to: "career@fascom.com", 
+              subject: "Hello !✔", 
           text: `welcome to fascom limited
-        name:${name},
-        experience:${experience},
-        coverletter:${coverletter},
-        `,
+          name:${name},
+          experience:${experience},
+          coverletter:${coverletter},
+          `,
           html: ` <p>Welcome to fascom limited</p>
-        <p>name: ${name}</p>
-        <p>career: ${selectcareer}</p>
-        <p>experience: ${experience}</p>
-        <p>mobile number: ${mobile}</p>
-        <p>email Address: ${email}</p>
-        <p>coverletter: ${coverletter}</p>
-        <p>file link: <a href="${secure_url}">${secure_url}</a></p>
-      `,
+          <p>name: ${name}</p>
+          <p>career: ${selectcareer}</p>
+          <p>experience: ${experience}</p>
+          <p>mobile number: ${mobile}</p>
+          <p>email Address: ${email}</p>
+          <p>coverletter: ${coverletter}</p>
+          <p>file link: <a href="${secure_url}">${secure_url}</a></p>
+          `,
         });
-        const info1 = await transporter.sendMail({
+        const info1 =  transporter.sendMail({
           from: "career@fascom.com", // sender address
           to: email, // list of receivers
           subject: `Thank You for Applying -! ${name}`, // Subject line
@@ -136,28 +140,33 @@ routes.post("/uploadcv", async (req, res) => {
           Dear ${name},
           
           Thank you for taking the time to apply for the ${selectcareer} position at  Fascom Limited . We are delighted to inform you that your application has been successfully received.
-
-Your interest in joining our team as a ${selectcareer} is greatly appreciated. Our hiring team is currently reviewing applications and may reach out to you for further details or to schedule an interview. 
-
-Your qualifications and experience have captured our attention, and we're eager to learn more about your potential contributions to our organization.
-
-In the meantime, feel free to update your profile and set up job alerts on our platform to stay informed about upcoming opportunities that align with your skills and interests.
-
-We recognize the effort you've put into your application and are excited about the possibility of having you as part of our team. Wishing you the best of luck in your job search!
-
-Thank you once again for considering a career with  Fascom Limited.
-
-Best regards,
-Talent Acquisition Team
-FASCOM LIMITED
-        `,
+          
+          Your interest in joining our team as a ${selectcareer} is greatly appreciated. Our hiring team is currently reviewing applications and may reach out to you for further details or to schedule an interview. 
+          
+          Your qualifications and experience have captured our attention, and we're eager to learn more about your potential contributions to our organization.
+          
+          In the meantime, feel free to update your profile and set up job alerts on our platform to stay informed about upcoming opportunities that align with your skills and interests.
+          
+          We recognize the effort you've put into your application and are excited about the possibility of having you as part of our team. Wishing you the best of luck in your job search!
+          
+          Thank you once again for considering a career with  Fascom Limited.
+          
+          Best regards,
+          Talent Acquisition Team
+          FASCOM LIMITED
+          `,
         });
-
-        res.status(200).send({
-          message:
-            "Uploaded the file successfully & send email sucessfully! " +
-            req.file,
-        });
+      }, 10000); 
+    }
+    
+    res.status(200).send({
+      
+      message:
+      "Uploaded the file successfully & send email sucessfully! " +
+      req.file,
+    });
+    sending_email()
+      
       }
     });
   } catch (err) {
